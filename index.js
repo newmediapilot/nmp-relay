@@ -32,11 +32,11 @@ const tasks = [
         return await downloadImages(urls);
     },
     async (data) => {
-        const imagePath = await getOldestFile("./.images");
+        const oldestFile = await getOldestFile("./.images");
         const tweetText = "Beep Boop";
         const secretPath = "./.secret.json";
-        return Promise.resolve();
-        // return tweetImage(tweetText, imagePath, secretPath);
+        console.log('oldestFile', oldestFile);
+        return tweetImage(tweetText, oldestFile, secretPath);
     }
 ];
 
