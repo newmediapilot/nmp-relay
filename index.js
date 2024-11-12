@@ -1,58 +1,55 @@
 // index.js
-const fetchHtml = require('./src/fetchHtml.js');
-const extractImageUrls = require('./src/extractImageUrls.js');
-const downloadImages = require('./src/downloadImages.js');
-const getOldestFile = require('./src/getOldestFile.js');
-const tweetImage = require('./src/tweetImage.js');
+const fs = require('fs');
+const processUrl = require('./src/processUrl');
 
-// Process command-line arguments for the URL
+// Process command-line arguments for the config file and interval
 const args = process.argv.slice(2);
-const urlArg = args.find(arg => arg.startsWith('--url='));
-const url = urlArg ? urlArg.split('=')[1] : "https://old.reddit.com/r/dankmemes/";
+const configArg = args.find(arg => arg.startsWith('--config='));
+const intervalArg = args.find(arg => arg.startsWith('--interval='));
 
-// Define the global shared object at the top
-const sharedData = {
-    url
-};
+if (!configArg) {
+    console.error("❌ Error: Please specify a --config file.");
+    process.exit(1);
+}
 
-// Array of functions to run in sequence
-const tasks = [
-    async (data) => {
-        const {url} = data;
-        data.html = await fetchHtml(url);
-        return Promise.resolve();
-    },
-    async (data) => {
-        const {html} = data;
-        data.urls = await extractImageUrls(html);
-        return Promise.resolve();
-    },
-    async (data) => {
-        const {urls} = data;
-        return await downloadImages(urls);
-    },
-    async (data) => {
-        const oldestFile = await getOldestFile("./.images");
-        const tweetText = "Beep Boop daily meme #meme #dankmeme";
-        const secretPath = "./.secret.json";
-        console.log('oldestFile', oldestFile);
-        return tweetImage(tweetText, oldestFile, secretPath);
-    }
-];
+const configPath = configArg.split('=')[1];
+const interval = intervalArg ? parseInt(intervalArg.split('=')[1], 10) : 3600000; // Default interval: 1 hour (3600000 ms)
 
-// Function to run tasks sequentially
-async function runTasks(tasks, data) {
-    for (let task of tasks) {
-        await task(data); // Inject shared data into each task
+// Load config file
+let config;
+try {
+    config = JSON.parse(fs.readFileSync(configPath, 'utf-8'));
+} catch (error) {
+    console.error("❌ Error: Failed to load config file:", error);
+    process.exit(1);
+}
+
+// Function to run tasks sequentially for each URL in config with interval delay
+async function runTasks(urls, interval) {
+    for (const urlObj of urls) {
+        try {
+            await processUrl(urlObj);
+            console.log("🎉 All tasks completed for this URL.");
+        } catch (error) {
+            console.error("❌ An error occurred while processing this URL:", error);
+        }
+
+        // Wait for the specified interval before processing the next URL
+        if (urls.indexOf(urlObj) < urls.length - 1) {
+            console.log(`⏳ Waiting for ${interval} milliseconds before processing the next URL...`);
+            await new Promise(resolve => setTimeout(resolve, interval));
+        }
     }
 }
 
-// Main execution with error handling
+// Main execution
 (async () => {
-    try {
-        await runTasks(tasks, sharedData);
-        console.log("All tasks completed successfully.");
-    } catch (error) {
-        console.error("An error occurred:", error);
+    if (!config.urls || !Array.isArray(config.urls)) {
+        console.error("❌ Error: Config file must contain an array of URLs under 'urls'.");
+        process.exit(1);
     }
+
+    console.log("🚀 Starting the process with the provided config file...");
+    await runTasks(config.urls, interval);
+    console.log("✅ All URLs processed successfully.");
 })();
