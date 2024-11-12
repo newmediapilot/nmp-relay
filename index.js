@@ -27,8 +27,10 @@ const tasks = [
         return await downloadImages(urls);
     },
     async (data) => {
-        const image = await getOldestFile("./.images");
-        return Promise.resolve(); // await tweetImage("testing", image, "./.secret.json");
+        const imagePath = await getOldestFile("./.images");
+        const tweetText = "dabears";
+        const secretPath = "./.secret.json";
+        return tweetImage(tweetText, imagePath, secretPath);
     }
 ];
 
