@@ -33,7 +33,7 @@ const tasks = [
     },
     async (data) => {
         const oldestFile = await getOldestFile("./.images");
-        const tweetText = "Beep Boop";
+        const tweetText = "Beep Boop daily meme #meme #dankmeme";
         const secretPath = "./.secret.json";
         console.log('oldestFile', oldestFile);
         return tweetImage(tweetText, oldestFile, secretPath);
