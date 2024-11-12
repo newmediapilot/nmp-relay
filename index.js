@@ -5,9 +5,14 @@ const downloadImages = require('./src/downloadImages.js');
 const getOldestFile = require('./src/getOldestFile.js');
 const tweetImage = require('./src/tweetImage.js');
 
+// Process command-line arguments for the URL
+const args = process.argv.slice(2);
+const urlArg = args.find(arg => arg.startsWith('--url='));
+const url = urlArg ? urlArg.split('=')[1] : "https://old.reddit.com/r/dankmemes/";
+
 // Define the global shared object at the top
 const sharedData = {
-    url: "https://old.reddit.com/r/dankmemes/"
+    url
 };
 
 // Array of functions to run in sequence
@@ -28,9 +33,10 @@ const tasks = [
     },
     async (data) => {
         const imagePath = await getOldestFile("./.images");
-        const tweetText = "dabears";
+        const tweetText = "Beep Boop";
         const secretPath = "./.secret.json";
-        return tweetImage(tweetText, imagePath, secretPath);
+        return Promise.resolve();
+        // return tweetImage(tweetText, imagePath, secretPath);
     }
 ];
 
