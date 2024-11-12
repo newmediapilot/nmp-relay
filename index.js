@@ -25,21 +25,21 @@ try {
     process.exit(1);
 }
 
-// Function to run tasks sequentially for each URL in config with interval delay
+// Function to run tasks with a random URL selection at each interval
 async function runTasks(urls, interval) {
-    for (const urlObj of urls) {
+    while (true) { // Infinite loop to continually run the tasks
+        // Inline random selection of a URL object
+        const urlObj = urls[Math.floor(Math.random() * urls.length)];
+
         try {
             await processUrl(urlObj);
-            console.log("🎉 All tasks completed for this URL.");
+            console.log("🎉 Task completed for the random URL:", urlObj.url);
         } catch (error) {
-            console.error("❌ An error occurred while processing this URL:", error);
+            console.error("❌ An error occurred while processing the URL:", urlObj.url, error);
         }
 
-        // Wait for the specified interval before processing the next URL
-        if (urls.indexOf(urlObj) < urls.length - 1) {
-            console.log(`⏳ Waiting for ${interval} milliseconds before processing the next URL...`);
-            await new Promise(resolve => setTimeout(resolve, interval));
-        }
+        console.log(`⏳ Waiting for ${interval} milliseconds before picking the next random URL...`);
+        await new Promise(resolve => setTimeout(resolve, interval));
     }
 }
 
@@ -63,7 +63,6 @@ async function runTasks(urls, interval) {
 
     console.log("✅ All URLs validated successfully. Starting tasks...");
 
-    // Run the tasks for each URL in the configuration file
+    // Run the tasks with random URL selection at each interval
     await runTasks(config.urls, interval);
-    console.log("✅ All URLs processed successfully.");
 })();
