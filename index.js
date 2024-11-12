@@ -42,8 +42,11 @@ async function runTasks(urls, interval) {
     console.log(`⏳ Starting countdown of ${interval} milliseconds before the next task...`);
     countDown(interval);
 
-    // Wait for the interval duration before the next task
+    // Wait for the interval duration before calling runTasks again
     await new Promise(resolve => setTimeout(resolve, interval));
+
+    // Call runTasks again to create a continuous loop
+    runTasks(urls, interval);
 }
 
 // Main execution
@@ -66,6 +69,6 @@ async function runTasks(urls, interval) {
 
     console.log("✅ All URLs validated successfully. Starting tasks...");
 
-    // Run the tasks with random URL selection at each interval
-    await runTasks(config.urls, interval);
+    // Start the first run of tasks with random URL selection at each interval
+    runTasks(config.urls, interval);
 })();
