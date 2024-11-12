@@ -1,7 +1,8 @@
 // index.js
 const fs = require('fs');
 const processUrl = require('./src/processUrl');
-const validateConfig = require('./src/validateConfig'); // Import the validateConfig function
+const validateConfig = require('./src/validateConfig');
+const countDown = require('./src/countDown'); // Import the countDown function
 
 // Process command-line arguments for the config file and interval
 const args = process.argv.slice(2);
@@ -27,20 +28,22 @@ try {
 
 // Function to run tasks with a random URL selection at each interval
 async function runTasks(urls, interval) {
-    while (true) { // Infinite loop to continually run the tasks
-        // Inline random selection of a URL object
-        const urlObj = urls[Math.floor(Math.random() * urls.length)];
+    // Inline random selection of a URL object
+    const urlObj = urls[Math.floor(Math.random() * urls.length)];
 
-        try {
-            await processUrl(urlObj);
-            console.log("🎉 Task completed for the random URL:", urlObj.url);
-        } catch (error) {
-            console.error("❌ An error occurred while processing the URL:", urlObj.url, error);
-        }
-
-        console.log(`⏳ Waiting for ${interval} milliseconds before picking the next random URL...`);
-        await new Promise(resolve => setTimeout(resolve, interval));
+    try {
+        await processUrl(urlObj);
+        console.log("🎉 Task completed for the random URL:", urlObj.url);
+    } catch (error) {
+        console.error("❌ An error occurred while processing the URL:", urlObj.url, error);
     }
+
+    // Start countdown for the interval period
+    console.log(`⏳ Starting countdown of ${interval} milliseconds before the next task...`);
+    countDown(interval);
+
+    // Wait for the interval duration before the next task
+    await new Promise(resolve => setTimeout(resolve, interval));
 }
 
 // Main execution
