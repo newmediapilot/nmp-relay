@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "node index.js --config=config.json --interval=10800000",
+    "reset": "rm -rf ./images ./node_modules && mkdir ./ images && npm i",
     "postinstall": "npx playwright install"
   },
   "keywords": [],
