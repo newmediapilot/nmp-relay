@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js --config=config.json --interval=10000",
+    "start": "node index.js --config=config.json --interval=10800000",
     "postinstall": "npx playwright install"
   },
   "keywords": [],

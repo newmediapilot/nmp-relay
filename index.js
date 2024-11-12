@@ -1,6 +1,7 @@
 // index.js
 const fs = require('fs');
 const processUrl = require('./src/processUrl');
+const validateConfig = require('./src/validateConfig'); // Import the validateConfig function
 
 // Process command-line arguments for the config file and interval
 const args = process.argv.slice(2);
@@ -49,7 +50,20 @@ async function runTasks(urls, interval) {
         process.exit(1);
     }
 
-    console.log("🚀 Starting the process with the provided config file...");
+    console.log("🚀 Validating URLs in the provided config file...");
+
+    // Run validateConfig and proceed only if all URLs are valid
+    const validationResult = await validateConfig(config);
+
+    if (!validationResult.success) {
+        console.error("❌ Validation failed. Please fix the following invalid URLs:");
+        validationResult.invalidUrls.forEach(({ url }) => console.error(`❌ Invalid URL: ${url}`));
+        process.exit(1); // Exit if validation fails
+    }
+
+    console.log("✅ All URLs validated successfully. Starting tasks...");
+
+    // Run the tasks for each URL in the configuration file
     await runTasks(config.urls, interval);
     console.log("✅ All URLs processed successfully.");
 })();
