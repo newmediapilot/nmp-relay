@@ -2,6 +2,8 @@
 const fetchHtml = require('./src/fetchHtml.js');
 const extractImageUrls = require('./src/extractImageUrls.js');
 const downloadImages = require('./src/downloadImages.js');
+const getOldestFile = require('./src/getOldestFile.js');
+const tweetImage = require('./src/tweetImage.js');
 
 // Define the global shared object at the top
 const sharedData = {
@@ -22,8 +24,11 @@ const tasks = [
     },
     async (data) => {
         const {urls} = data;
-        await downloadImages(urls);
-        return Promise.resolve();
+        return await downloadImages(urls);
+    },
+    async (data) => {
+        const image = await getOldestFile("./.images");
+        return Promise.resolve(); // await tweetImage("testing", image, "./.secret.json");
     }
 ];
 
