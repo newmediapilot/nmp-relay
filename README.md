@@ -1,6 +1,6 @@
 # About
 
-This repository automates posting tweets sourced from selected Reddit meme subreddits. It continuously pulls memes at specified intervals and applies AI-based filters to ensure preferred content and maturity ratings for safe posting.
+This repository automates posting tweets sourced from selected Reddit meme subreddits. It continuously pulls memes at specified intervals ~~and applies AI-based filters to ensure preferred content and maturity ratings for safe posting~~.
 
 ## Prerequisites
 
@@ -17,7 +17,7 @@ This repository automates posting tweets sourced from selected Reddit meme subre
   "TWITTER_APP_SECRET": "YOUR_TWITTER_API_SECRET",
   "TWITTER_ACCESS_TOKEN": "YOUR_TWITTER_ACCESS_TOKEN",
   "TWITTER_ACCESS_SECRET": "YOUR_TWITTER_ACCESS_SECRET",
-  "OPENAI_API_KEY": "YOUR_OPENAI_API_KEY"
+  // "OPENAI_API_KEY": "YOUR_OPENAI_API_KEY"
 }
 ```
 
