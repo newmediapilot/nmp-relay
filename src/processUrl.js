@@ -3,7 +3,7 @@
 const fetchHtml = require('./fetchHtml');
 const extractImageUrls = require('./extractImageUrls');
 const downloadImages = require('./downloadImages');
-const getNewestFile = require('./getNewestFile');
+const getRandomFile = require('./getRandomFile');
 const tweetImage = require('./tweetImage');
 
 /**
@@ -27,7 +27,7 @@ async function processUrl(urlObj) {
     console.log("📥 Image download complete.");
 
     console.log("🖼️ Finding the newest downloaded image for tweeting...");
-    const newestFile = await getNewestFile("./.images");
+    const newestFile = await getRandomFile("./.images");
     console.log("🐦 Posting the tweet with the newest image...");
     await tweetImage(tweet, newestFile, "./.secret.json");
     console.log("✅ Tweet posted successfully!");
