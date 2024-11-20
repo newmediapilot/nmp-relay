@@ -15,7 +15,7 @@ async function tweetImage(tweetText, imagePath, secretPath) {
     try {
         // Load Twitter API credentials from the secret JSON file
         const credentials = JSON.parse(fs.readFileSync(secretPath, 'utf-8'));
-        const { appKey, appSecret, bearerToken, accessToken, accessTokenSecret } = credentials;
+        const { appKey, appSecret, accessToken, accessTokenSecret } = credentials;
 
         // Initialize Twitter API client
         const client = new TwitterApi({
